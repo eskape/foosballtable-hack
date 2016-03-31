@@ -3,8 +3,8 @@
 import RPi.GPIO as GPIO
 import time
 GPIO.setmode(GPIO.BOARD)
-port_a = 38
-port_b = 5
+port_a = 40
+port_b = 33
 GPIO.setup(port_a, GPIO.IN)
 GPIO.setup(port_b, GPIO.IN)
 print "Waiting for sensor to settle"
