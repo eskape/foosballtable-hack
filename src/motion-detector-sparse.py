@@ -3,13 +3,21 @@
 import RPi.GPIO as GPIO
 import time
 GPIO.setmode(GPIO.BOARD)
-pir = 38
-GPIO.setup(pir, GPIO.IN)
+port_a = 38
+port_b = 5
+GPIO.setup(port_a, GPIO.IN)
+GPIO.setup(port_b, GPIO.IN)
 print "Waiting for sensor to settle"
 time.sleep(2)
 print "Detecting motion"
 while True:
-    if GPIO.input(pir) == 1:
-        print "Motion Detected!"
+    i=GPIO.input(port_a)
+    j=GPIO.input(port_b)
+    if i+j > 0:
+        if i == 1:
+            print "A: Motion Detected! @ port %d" % port_a
+        if j == 1:
+            print "B: Motion Detected! @ port %d" % port_b
+
         time.sleep(2)
     time.sleep(0.1)
