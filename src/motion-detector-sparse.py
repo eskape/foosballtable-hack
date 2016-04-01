@@ -11,8 +11,11 @@ print "Waiting for sensor to settle"
 time.sleep(2)
 print "Detecting motion"
 
+def gimme_motion(channel):
+  print "CH%d Motion Detected!" % channel
+
 GPIO.add_event_detect(port_a, GPIO.RISING, callback=gimme_motion)
 GPIO.add_event_detect(port_b, GPIO.RISING, callback=gimme_motion)
 
-def gimme_motion(channel):
-  print "CH%d Motion Detected!" % channel
+while True:
+  time.sleep(30)
