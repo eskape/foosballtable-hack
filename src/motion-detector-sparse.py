@@ -10,14 +10,9 @@ GPIO.setup(port_b, GPIO.IN)
 print "Waiting for sensor to settle"
 time.sleep(2)
 print "Detecting motion"
-while True:
-    i=GPIO.input(port_a)
-    j=GPIO.input(port_b)
-    if i+j > 0:
-        if i == 1:
-            print "A: Motion Detected! @ port %d" % port_a
-        if j == 1:
-            print "B: Motion Detected! @ port %d" % port_b
 
-        time.sleep(2)
-    time.sleep(0.1)
+GPIO.add_event_detect(port_a, GPIO.RISING, callback=gimme_motion)
+GPIO.add_event_detect(port_b, GPIO.RISING, callback=gimme_motion)
+
+def gimme_motion(channel, port):
+  print "A: Motion Detected! @ channel %d" % channel
