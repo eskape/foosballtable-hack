@@ -16,7 +16,7 @@ print "Detecting motion"
 
 ignoreEvent=False
 
-def resetIgnoreEvent:
+def resetIgnoreEvent(signum, frame):
   ignoreEvent = False
   # reset timer
   signal.settimer(signal.ITIMER_REAL, 0)
@@ -34,6 +34,6 @@ def gimme_motion(channel):
 GPIO.add_event_detect(port_a, GPIO.RISING, callback=gimme_motion)
 GPIO.add_event_detect(port_b, GPIO.RISING, callback=gimme_motion)
 
-signal.signal(signal.SIGALRM, resetIgnoreEvents)
+signal.signal(signal.SIGALRM, resetIgnoreEvent)
 while True:
   time.sleep(30)
