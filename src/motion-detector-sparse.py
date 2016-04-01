@@ -17,7 +17,7 @@ print "Detecting motion"
 ignoreEvent=False
 
 def resetIgnoreEvent(signum, frame):
-  ignoreEvent = False
+  global ignoreEvent = False
   # reset timer
   signal.settimer(signal.ITIMER_REAL, 0)
   print "Events are recorded again!"
@@ -27,7 +27,7 @@ def gimme_motion(channel):
     print "Currently ignoring events..."
     return
 
-  ignoreEvent = True
+  global ignoreEvent = True
   signal.setitimer(signal.ITIMER_REAL, timeout)
   print "CH%d Motion Detected!" % channel
 
