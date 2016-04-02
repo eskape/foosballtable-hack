@@ -23,12 +23,12 @@ class MotionDetector:
         self.timer = {}
         self.ignore_event = {}
         self.score = {}
-        self.names = {}
+        self.name = {}
         signal.signal(signal.SIGALRM, self._reset_ignore_event)
 
     def add_listener(self, channel, name, score = 0):
         if not self.__is_channel_available(channel):
-            print "Channel is already taken by team '%s'" % self.names[channel]
+            print "Channel is already taken by team '%s'" % self.name[channel]
             return
 
         GPIO.setup(channel, GPIO.IN)
@@ -45,7 +45,7 @@ class MotionDetector:
         self.timer[channel] = signal.setitimer(signal.ITIMER_REAL, 0)
         GPIO.remove_event_detect(channel)
         GPIO.cleanup(channel)
-        del self.names[channel]
+        del self.name[channel]
         del self.score[channel]
         del self.timer[channel]
         del self.ignore_event[channel]
@@ -57,15 +57,15 @@ class MotionDetector:
             return
 
         self.score[channel] = 0
-        print "Score for team '%s' reset to %d" % (self.names[channel], self.scores[channel])
+        print "Score for team '%s' reset to %d" % (self.name[channel], self.scores[channel])
 
     def rename(self, channel, new_name):
         if self.__is_channel_available(channel):
             print "Cannot rename unused channel"
             return
 
-        old_name = self.names[channel]
-        self.names[channel] = new_name
+        old_name = self.name[channel]
+        self.name[channel] = new_name
         print "Renamed '%s' -> '%s'" % (old_name, new_name)
 
 
@@ -81,9 +81,9 @@ class MotionDetector:
         self.score[channel] += 1
         self.timers[channel] = signal.setitimer(signal.ITIMER_REAL, self.timeout)
 
-        print "GOOOAAAALL!!!, team %s scored" % self.names[channel]
-        for key in self.names():
-            print "%s: %d" % (self.names[key], self.scores[key])
+        print "GOOOAAAALL!!!, team %s scored" % self.name[channel]
+        for key in self.name():
+            print "%s: %d" % (self.name[key], self.scores[key])
 
     def __is_channel_available(self, channel):
         if channel <= self.__max_channels and channel > 0 and not channel in self.scores:
