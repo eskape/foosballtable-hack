@@ -13,5 +13,7 @@ motion_detector = MotionDetector(timeout = 5)
 motion_detector.add_listener(port_a)
 motion_detector.add_listener(port_b)
 
-while True:
-  time.sleep(30)
+
+global k
+while k != "quit":
+    k=input("type 'quit' to exit")
