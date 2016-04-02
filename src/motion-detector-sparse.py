@@ -8,12 +8,10 @@ import signal
 #global ignoreEvent
 timeout = 5
 ignoreEvent = False
-score_TeamA = 0
-score_TeamB = 0
 port_a = 40
 port_b = 37
 
-score_mapping = { port_a: score_TeamA, port_b: score_TeamB }
+score_mapping = { port_a: 0, port_b: 0 }
 
 def resetIgnoreEvent(signum, frame):
   global ignoreEvent
@@ -32,7 +30,9 @@ def gimme_motion(channel):
   ignoreEvent = True
   score_mapping[channel] += 1
   signal.setitimer(signal.ITIMER_REAL, timeout)
-  print "CH%d Motion Detected!" % channel
+
+  print "GOOOAAAALL!!!"
+  print "%d - %d" % (score_mapping[port_a], score_mapping[port_b])
 
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(port_a, GPIO.IN)
