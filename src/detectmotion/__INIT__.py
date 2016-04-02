@@ -18,12 +18,14 @@ class MotionDetector:
 
     def __init__(self, timeout = 5):
         GPIO.setmode(GPIO.BOARD)
-        self.timeout = timeout
+
         self.__max_channels = 40
-        self.timer = {}
-        self.ignore_event = {}
         self.score = {}
         self.name = {}
+
+        self.ignore_event = False
+        self.timeout = timeout
+        self.timer = signal.setitimer(signal.ITIMER_REAL, 0)
         signal.signal(signal.SIGALRM, self._reset_ignore_event)
 
     def add_listener(self, channel, name, score = 0):
@@ -33,22 +35,17 @@ class MotionDetector:
 
         GPIO.setup(channel, GPIO.IN)
         self.score[channel] = score
-        self.ignore_event[channel] = False
-        self.timer[channel] = signal.setitimer(signal.ITIMER_REAL, 0)
         GPIO.add_event_detect(channel, GPIO.RISING, callback=self._handle_signal)
-        print "Keeping track of score @ channel %d" % channel
+        print "Keeping track of score for team '%s' @ channel %d" % (name, channel)
 
     def remove_listener(self, channel):
         if self.__is_channel_available(channel):
             return
 
-        self.timer[channel] = signal.setitimer(signal.ITIMER_REAL, 0)
         GPIO.remove_event_detect(channel)
         GPIO.cleanup(channel)
         del self.name[channel]
         del self.score[channel]
-        del self.timer[channel]
-        del self.ignore_event[channel]
         print "Cleared channel %d" % channel
 
     def reset_score(self, channel):
@@ -68,18 +65,17 @@ class MotionDetector:
         self.name[channel] = new_name
         print "Renamed '%s' -> '%s'" % (old_name, new_name)
 
-
-    def _reset_ignore_event(self, channel, frame):
-        self.ignore_event[channel] = False
-        self.timer[channel] = signal.setitimer(signal.ITIMER_REAL, 0)
+    def _reset_ignore_event(self, signum, frame):
+        self.ignore_event = False
+        self.timer = signal.setitimer(signal.ITIMER_REAL, 0)
 
     def _handle_signal(self, channel):
-        if self.ignore_event[channel]:
+        if self.ignore_event:
             return
 
-        self.ignore_event[channel] = True
+        self.ignore_event= True
         self.score[channel] += 1
-        self.timers[channel] = signal.setitimer(signal.ITIMER_REAL, self.timeout)
+        self.timer = signal.setitimer(signal.ITIMER_REAL, self.timeout)
 
         print "GOOOAAAALL!!!, team %s scored" % self.name[channel]
         for key in self.name():
