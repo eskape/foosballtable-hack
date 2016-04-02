@@ -14,6 +14,6 @@ motion_detector.add_listener(port_a)
 motion_detector.add_listener(port_b)
 
 
-global k
-while k != "quit":
-    k=input("type 'quit' to exit")
+global user_input
+while user_input not "quit":
+    user_input=raw_input("type 'quit' to exit")
