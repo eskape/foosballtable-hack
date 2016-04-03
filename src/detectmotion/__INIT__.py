@@ -13,10 +13,10 @@ class MotionDetector:
         add_listener(channel, name) - add a listener for teem <name> @ channel <channel>
         remove_listener(channel)    - remove the listener
         reset_score(channel)        - reset score to zero
-        rename(channel, new_name)   - rename team to <new_name>
+        rename_team(channel, new_name)   - rename team to <new_name>
     """
 
-    def __init__(self, timeout = 5):
+    def __init__(self, idle_timeout = 5):
         GPIO.setmode(GPIO.BOARD)
 
         self.__max_channels = 40
@@ -24,7 +24,7 @@ class MotionDetector:
         self.name = {}
 
         self.ignore_event = False
-        self.timeout = timeout
+        self.__idle_timeout = idle_timeout
         self.timer = signal.setitimer(signal.ITIMER_REAL, 0)
         signal.signal(signal.SIGALRM, self._reset_ignore_event)
 
@@ -56,7 +56,7 @@ class MotionDetector:
         self.score[channel] = 0
         print "Score for team '%s' reset to %d" % (self.name[channel], self.scores[channel])
 
-    def rename(self, channel, new_name):
+    def rename_team(self, channel, new_name):
         if self.__is_channel_available(channel):
             print "Cannot rename unused channel"
             return
@@ -75,7 +75,7 @@ class MotionDetector:
 
         self.ignore_event= True
         self.score[channel] += 1
-        self.timer = signal.setitimer(signal.ITIMER_REAL, self.timeout)
+        self.timer = signal.setitimer(signal.ITIMER_REAL, self.__idle_timeout)
 
         print "GOOOAAAALL!!!, team %s scored" % self.name[channel]
         for key in self.name():
