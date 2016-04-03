@@ -5,7 +5,7 @@ import time
 import signal 
 
 
-class MotionDetector:
+class Sensor:
     """
         Detect motion on Raspberri Pi sensor to track scores.
         Have an idle timout of <self.timeout> on each channel after something is detected.
