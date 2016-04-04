@@ -79,7 +79,7 @@ class Sensor:
 
         print "GOOOAAAALL!!!, team %s scored" % self.name[channel]
         for key in self.name():
-            print "%s: %d" % (self.name[key], self.scores[key])
+            print "%s%s: %d" % ("* " if key == channel else "  ", self.name[key], self.scores[key]
 
     def __is_channel_available(self, channel):
         if channel <= self.__max_channels and channel > 0 and not channel in self.scores:
