@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import RPi.GPIO as GPIO
 import time
 
@@ -8,9 +10,11 @@ GPIO.setmode(GPIO.BOARD)
 pin_sensor = 31
 GPIO.setup(pin_sensor, GPIO.IN)
 
+curr=GPIO.input(pin_sensor)
+prev=-1
 while True:
-        i = GPIO.input(pin_sensor)
-	if (i == 0):
-		print "Goal!"
-		time.sleep(1)	
-	    
+    curr = GPIO.input(pin_sensor)
+    if (curr == 0) and not curr is prev:
+        print "Goal!"
+
+    prev=curr
