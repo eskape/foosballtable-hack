@@ -14,7 +14,7 @@ curr=GPIO.input(pin_sensor)
 prev=-1
 while True:
     curr = GPIO.input(pin_sensor)
-    if (i == 0) and not curr is prev:
+    if (curr == 0) and not curr is prev:
         print "Goal!"
 
     prev=curr
