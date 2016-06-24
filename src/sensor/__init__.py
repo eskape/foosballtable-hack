@@ -1,5 +1,6 @@
 import RPi.GPIO as GPIO
 import logging
+import requests
 
 class Sensor:
   def __init__(self, *channels):
@@ -20,3 +21,11 @@ class Sensor:
   
   def __teamscores(self, channel):
     logging.info("Event detected for %s on channel %s" % (self.__mappings[channel], channel))
+    response = requests.post("http://httpbin.org/post", data = {"Team": self.__mappings[channel]});
+
+    if (response.status_code == 200):
+      logging.info("Sent %s score successfully" % self.__mappings[channel])
+    else:
+      logging.info("Failed sending %s score" % self.__mappings[channel])
+      logging.info("Status code %s" % response.status_code)
+      logging.info(response.text)
