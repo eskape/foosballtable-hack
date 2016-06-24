@@ -1,20 +1,22 @@
 import RPi.GPIO as GPIO
+import logging
 
 class Sensor:
-  def __init__(self, *pins):
+  def __init__(self, *channels):
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BOARD)
     self.__mappings = {}
-    self.__setup(pins)
+    self.__setup(channels)
     
-  def __setup(self, pins):
+  def __setup(self, channels):
     self.__mappings = {}
     number = 0
-    for pin in pins:
+    for channel in channels:
       number += 1
-      GPIO.setup(pin, GPIO.IN)
-      GPIO.add_event_detect(pin, GPIO.FALLING, callback=self.__teamscores)
-      self.__mappings[pin] = "Team %d" % number
-
+      GPIO.setup(channel, GPIO.IN)
+      GPIO.add_event_detect(channel, GPIO.FALLING, callback=self.__teamscores)
+      self.__mappings[channel] = "Team %d" % number
+      logging.info("Listening for events for %s on channel %s" % (self.__mappings[channel], channel))
+  
   def __teamscores(self, channel):
-    print "%s scored on channel %s" % (self.__mappings[channel], channel)
+    logging.info("Event detected for %s on channel %s" % (self.__mappings[channel], channel))
