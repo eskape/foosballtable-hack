@@ -1,7 +1,6 @@
 import RPi.GPIO as GPIO
 import logging
 import requests
-import json
 
 class Sensor:
   def __init__(self, *channels):
